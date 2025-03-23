@@ -5,6 +5,7 @@
 
   --primary-color: #00317D;
   --secondary-color: #f7f7f7;
+  --strong-primary-color: #001f4d;
   --text-color: #050505;
   --background-color: #E9E9E9;
 
@@ -12,4 +13,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
 }
