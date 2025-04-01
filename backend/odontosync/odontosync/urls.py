@@ -1,22 +1,20 @@
-"""
-URL configuration for odontosync project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
+from dentist.views import DentistList, DentistDetail
+from patient.views import PatientList, PatientDetail
+from schedule.views import ScheduleList, ScheduleDetail
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    path('dentist/', DentistList.as_view()),
+    path('dentist/<str:crm>/', DentistDetail.as_view()),
+
+    path('patient/', PatientList.as_view()),
+    path('patient/<str:cpf>/', PatientDetail.as_view()),
+
+    path('schedule/', ScheduleList.as_view()),
+    path('schedule/<int:pk>/', ScheduleDetail.as_view()),
 ]
