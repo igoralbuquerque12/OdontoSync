@@ -1,0 +1,29 @@
+# Ignorar o ambiente virtual
+.venv/
+venv/
+ 
+# Arquivos de compilação do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+ 
+# Arquivos de configuração do editor
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Arquivos de log
+*.log
+
+# Banco de dados SQLite (se estiver usando o SQLite no Django)
+db.sqlite3
+
+# Arquivos de migração do Django (geralmente desnecessário versioná-los)
+*/migrations/
+
+# Arquivos gerados por ferramentas de pacotes
+*.egg-info/
+dist/
+build/
