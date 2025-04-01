@@ -8,4 +8,4 @@ class Dentist(models.Model):
     status = models.BooleanField(default=True)  
 
     def __str__(self):
-        return self.name
+        return f'Dentist - {self.name}'
