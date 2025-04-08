@@ -86,7 +86,7 @@ export function AppSidebar() {
           <SidebarGroupContent className="pt-6">
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className="flex flex-col py-1">
+                <SidebarMenuItem key={item.title} className="flex flex-col py-1 ">
                   <SidebarMenuButton asChild className="text-lg font-medium hover:bg-accent">
                     <a href={item.url} className="flex items-center gap-2 p-2">
                       <item.icon className="h-5 w-5" />
