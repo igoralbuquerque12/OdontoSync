@@ -64,7 +64,7 @@ const items = [
     icon: User,
     subItems: [
       { title: "Buscar", url: "#buscar", icon: Search },
-      { title: "Cadastrar", url: "#cadastrar", icon: UserPlus },
+      { title: "Cadastrar", url: "/pacientes/cadastrar/", icon: UserPlus },
     ]
   },
   {
