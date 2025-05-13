@@ -28,7 +28,7 @@ export async function getPatients(cpf: string = ''): Promise<Patient | null> {
 export async function postPatient(patient: Patient): Promise<boolean> {
     try {
         const response = await fetch(`http://localhost:8000/api/v1/patient/`, {
-            method: 'POST',
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -36,7 +36,7 @@ export async function postPatient(patient: Patient): Promise<boolean> {
         })
 
         if (!response.ok) {
-            throw new Error('Bad return from get patient')
+            throw new Error("Bad return from get patient")
         }
 
         return true

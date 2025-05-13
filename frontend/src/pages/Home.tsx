@@ -16,7 +16,7 @@ export default function Home() {
       <div className='flex justify-between m-5 p-2'>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <Button asChild variant="default" className='border-1 bg-[#003566] text-white hover:bg-white hover:text-black p-5'>
-            <Link to="/paciente/cadastrar"><UserRoundPlus /> Cadastrar Paciente</Link>
+            <Link to="/agenda/cadastrar"><UserRoundPlus /> Cadastrar Horário</Link>
         </Button>
       </div>
       
