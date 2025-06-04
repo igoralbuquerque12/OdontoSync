@@ -12,5 +12,5 @@ class Schedule(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     
 
-    def __init__(self):
+    def __str__(self):
         return f'Schedule - {self.patient} at {self.date}'
