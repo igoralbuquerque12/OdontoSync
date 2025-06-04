@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from 'sonner'
+import { PatternFormat } from 'react-number-format';
 
 import { postSchedule } from '@/services/scheduleService'
 import { Patient } from '@/interfaces/patient'
@@ -104,7 +105,16 @@ export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormP
                 <FormItem>
                   <FormLabel>CPF</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled />
+                    <PatternFormat
+                      format="###.###.###-##"
+                      mask="_"
+                      value={field.value}
+                      onValueChange={(values) => {
+                        field.onChange(values.value);
+                      }}
+                      customInput={Input}
+                      disabled={field.disabled}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
