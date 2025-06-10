@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Schedule } from "@/interfaces/schedule"
 import { Clock, MoreHorizontal, Phone } from "lucide-react"
 
 
@@ -62,7 +63,7 @@ const listPatients = [
   },
 ]
 
-export function ListPatient() {
+export function ListPatient({ dataSchedule }: { dataSchedule: Schedule[] }) {
   return (
     <Table>
       <TableHeader>
@@ -84,7 +85,7 @@ export function ListPatient() {
                   <AvatarFallback>{appointment.initials}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">{appointment.patientName}</p>
+                  <p className="text-sm font-medium leading-none">{dataSchedule[0].date}</p>
                   <p className="text-xs text-muted-foreground md:hidden">{appointment.treatment}</p>
                 </div>
               </div>

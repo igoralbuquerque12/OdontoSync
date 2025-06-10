@@ -7,10 +7,33 @@ import { ListPatient } from '../components/list-patients'
 import { AIContainer } from '../components/ai-container'
 
 import { getDateToday } from '../utils/getDate'
+import { Schedule } from '@/interfaces/schedule'
+import { getSchedule } from '@/services/scheduleService'
+
+import { useEffect, useState } from 'react'
 
 const today = getDateToday();
 
 export default function Home() {
+  const [dataSchedule, setDataSchedule] = useState<Schedule[]>([])
+
+  useEffect(() => {
+    const today = new Date()
+
+    const getDataSchedule = async () => {
+      const response = await getSchedule(today)
+
+      return response.content
+    }
+
+    const setScheduleByFetch = async () => {
+      const data = await getDataSchedule()
+      setDataSchedule(data as Schedule[])
+    }
+    
+    setScheduleByFetch()
+  }, [])
+
   return (
     <div>
       <div className='flex justify-between m-5 p-2'>
@@ -40,7 +63,7 @@ export default function Home() {
           <h1 className='text-2xl font-bold pb-1'>Agenda do Dia</h1>
           <p className='text-gray-500 font-medium'>{today[0]}, {today[1]} de {today[2]} de {today[3]}</p>
         </div>
-        <ListPatient />
+        <ListPatient dataSchedule={dataSchedule} />
       </div>
     </div>
   )
