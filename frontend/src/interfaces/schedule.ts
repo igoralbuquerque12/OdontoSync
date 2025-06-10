@@ -11,7 +11,7 @@ export const scheduleSchemaForm = z.object({
 
   serviceType: z.string(),
 
-  value: z.string(), 
+  value: z.string(),
 
   patient: z.object({
     name: z.string(),
@@ -21,19 +21,33 @@ export const scheduleSchemaForm = z.object({
 })
 
 export interface Schedule {
-    date: string
-    time: string
-    service_type: number
-    value: string
-    dentist: string
-    patient: string // receive only cpf
+  date: string
+  time: string
+  service_type: number
+  value: string
+  dentist: string
+  patient: string // receive only cpf
+}
+
+export interface ListSchedule {
+  id: number
+  date: string
+  time: string
+  service_type: number
+  value: string
+  dentist: string
+  patient: {
+    name: string
+    cpf: string
+    phone: string
+  }
 }
 
 export const defaultSchedule = {
-    date: '',
-    time: '',
-    service_type: 0,
-    value: '',
-    dentist: '',
-    patient: ''
+  date: '',
+  time: '',
+  service_type: 0,
+  value: '',
+  dentist: '',
+  patient: ''
 }

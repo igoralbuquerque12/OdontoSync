@@ -1,10 +1,10 @@
 import { defaultErrorFunction } from '../utils/errorTratament'
-import { Schedule } from '../interfaces/schedule'
+import { Schedule, ListSchedule } from '../interfaces/schedule'
 import { formatDate } from '@/utils/formatDate'
 
 interface returnType {
     status: boolean
-    content: Schedule | Schedule[] | string | null
+    content: ListSchedule[] | Schedule[] | Schedule | string | null
 }
 
 export async function getSchedule(date: Date) {
@@ -19,7 +19,7 @@ export async function getSchedule(date: Date) {
 
         if (!response.ok) throw new Error('Erro ao buscar dados de agendamentos')
 
-        const data: Schedule[] = await response.json()
+        const data: ListSchedule[] = await response.json()
 
         return {
             status: true,

@@ -7,7 +7,7 @@ import { ListPatient } from '../components/list-patients'
 import { AIContainer } from '../components/ai-container'
 
 import { getDateToday } from '../utils/getDate'
-import { Schedule } from '@/interfaces/schedule'
+import { ListSchedule } from '@/interfaces/schedule'
 import { getSchedule } from '@/services/scheduleService'
 
 import { useEffect, useState } from 'react'
@@ -15,20 +15,20 @@ import { useEffect, useState } from 'react'
 const today = getDateToday();
 
 export default function Home() {
-  const [dataSchedule, setDataSchedule] = useState<Schedule[]>([])
+  const [dataSchedule, setDataSchedule] = useState<ListSchedule[]>([])
 
   useEffect(() => {
     const today = new Date()
 
     const getDataSchedule = async () => {
       const response = await getSchedule(today)
-
+      
       return response.content
     }
 
     const setScheduleByFetch = async () => {
       const data = await getDataSchedule()
-      setDataSchedule(data as Schedule[])
+      setDataSchedule(data as ListSchedule[])
     }
     
     setScheduleByFetch()

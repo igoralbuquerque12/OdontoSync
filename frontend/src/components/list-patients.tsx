@@ -1,108 +1,53 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Schedule } from "@/interfaces/schedule"
+import { ListSchedule } from "@/interfaces/schedule"
 import { Clock, MoreHorizontal, Phone } from "lucide-react"
 
 
-const listPatients = [
-  {
-    id: "1",
-    patientName: "Olivia Johnson",
-    time: "09:00 AM",
-    treatment: "Dental Cleaning",
-    status: "Confirmed",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "OJ",
-  },
-  {
-    id: "2",
-    patientName: "Ethan Williams",
-    time: "10:30 AM",
-    treatment: "Root Canal",
-    status: "Confirmed",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "EW",
-  },
-  {
-    id: "3",
-    patientName: "Sophia Brown",
-    time: "11:45 AM",
-    treatment: "Consultation",
-    status: "Pending",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "SB",
-  },
-  {
-    id: "4",
-    patientName: "James Davis",
-    time: "01:15 PM",
-    treatment: "Tooth Extraction",
-    status: "Confirmed",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "JD",
-  },
-  {
-    id: "5",
-    patientName: "Emma Wilson",
-    time: "03:00 PM",
-    treatment: "Dental Filling",
-    status: "Confirmed",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "EW",
-  },
-  {
-    id: "6",
-    patientName: "Noah Martinez",
-    time: "04:30 PM",
-    treatment: "Teeth Whitening",
-    status: "Pending",
-    avatar: "/placeholder.svg?height=32&width=32",
-    initials: "NM",
-  },
-]
+const services = ['Aparelho ortodôntico fixo', 'Aparelho ortodôntico móvel', 'Alinhadores invisíveis (Invisalign)', 'Manutenção ortodôntica', 'Correção de mordida (mordida cruzada, aberta, profunda)'];
+const status = "Confirmed"
 
-export function ListPatient({ dataSchedule }: { dataSchedule: Schedule[] }) {
+export function ListPatient({ dataSchedule }: { dataSchedule: ListSchedule[] }) {
+  
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Patient</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead className="hidden md:table-cell">Treatment</TableHead>
+          <TableHead>Paciente</TableHead>
+          <TableHead>Horário</TableHead>
+          <TableHead className="hidden md:table-cell">Serviço</TableHead>
+          <TableHead className="hidden md:table-cell">Contato</TableHead>
           <TableHead className="hidden md:table-cell">Status</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="text-right">Ações</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {listPatients.map((appointment) => (
-          <TableRow key={appointment.id}>
+        {dataSchedule.map((schedule) => (
+          <TableRow key={schedule.id}>
             <TableCell className="font-medium">
               <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={appointment.avatar} alt={appointment.patientName} />
-                  <AvatarFallback>{appointment.initials}</AvatarFallback>
-                </Avatar>
+                <p>{schedule.patient.name}</p>
                 <div>
-                  <p className="text-sm font-medium leading-none">{dataSchedule[0].date}</p>
-                  <p className="text-xs text-muted-foreground md:hidden">{appointment.treatment}</p>
+                  <p className="text-sm font-medium leading-none"></p>
+                  <p className="text-xs text-muted-foreground md:hidden">{services[schedule.service_type]}</p>
                 </div>
               </div>
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{appointment.time}</span>
+                <span className="text-sm">{schedule.time.split(':')[0]}:{schedule.time.split(':')[1]}</span>
               </div>
             </TableCell>
-            <TableCell className="hidden md:table-cell">{appointment.treatment}</TableCell>
+            <TableCell className="hidden md:table-cell">{services[schedule.service_type]}</TableCell>
+                        <TableCell className="hidden md:table-cell">{schedule.patient.phone}</TableCell>
             <TableCell className="hidden md:table-cell">
               <Badge
-                variant={appointment.status === "Confirmed" ? "default" : "outline"}
-                className={appointment.status === "Confirmed" ? "bg-green-500 hover:bg-green-600" : ""}
+                variant={status === "Confirmed" ? "default" : "outline"}
+                className={status === "Confirmed" ? "bg-green-500 hover:bg-green-600" : ""}
               >
-                {appointment.status}
+                {status}
               </Badge>
             </TableCell>
             <TableCell className="text-right">
