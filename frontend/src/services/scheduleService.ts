@@ -1,8 +1,12 @@
 import { defaultErrorFunction } from '../utils/errorTratament'
 import { Schedule } from '../interfaces/schedule'
 
+interface returnType {
+    status: boolean
+    content: Schedule | string | null
+}
 
-export async function postSchedule(schedule: Schedule): Promise<boolean> {
+export async function postSchedule(schedule: Schedule): Promise<returnType> {
     try {
         const response = await fetch("http://localhost:8000/api/v1/schedule/", {
             method: "POST",
@@ -16,11 +20,18 @@ export async function postSchedule(schedule: Schedule): Promise<boolean> {
             throw new Error("Bad return from get schedule")
         }
 
-        return true
+        const createdData: Schedule = await response.json()
+
+        return {
+            status: true,
+            content: createdData
+        }
 
     } catch (error) {
         defaultErrorFunction(error)
-        throw error
-        return false
+        return {
+            status: false,
+            content: 'Houve um erro ao criar agendamento.'
+        }
     }
 }

@@ -23,12 +23,12 @@ type ScheduleFormProps = {
 }
 
 export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormProps) {
-  
+
   const form = useForm<ScheduleFormData>({
     resolver: zodResolver(scheduleSchemaForm),
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
-      time: '00:00', 
+      time: '00:00',
       serviceType: '1',
       value: '0.00',
       patient: {
@@ -40,38 +40,35 @@ export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormP
   })
 
   const onSubmit = async (dataSchedule: ScheduleFormData) => {
-    try {
+    const serviceType = parseInt(dataSchedule.serviceType)
+    const value = parseFloat(dataSchedule.value.replace(',', '.')).toFixed(2)
+    const dentist = '111111' // only at development area
+    const patient = dataSchedule.patient.cpf
 
-      const serviceType = parseInt(dataSchedule.serviceType)
-      const value = parseFloat(dataSchedule.value.replace(',', '.')).toFixed(2)
-      const dentist = '111111' // only at development area
-      const patient = dataSchedule.patient.cpf
+    const dataPostSchedule: Schedule = {
+      date: dataSchedule.date,
+      time: dataSchedule.time,
+      service_type: serviceType,
+      value: value.toString(),
+      dentist: dentist,
+      patient: patient
+    }
 
-      const dataPostSchedule: Schedule = {
-        date: dataSchedule.date,
-        time: dataSchedule.time,
-        service_type: serviceType,
-        value: value.toString(),
-        dentist: dentist,
-        patient: patient
-      }
+    const response = await postSchedule(dataPostSchedule)
 
-      const response = await postSchedule(dataPostSchedule)
+    if (response.status) {
+      toast(`Agendamento cadastrado: ${dataSchedule.date} - ${dataSchedule.patient.name}`)
 
-      if (response) {
-        toast(`Agendamento cadastrado: ${dataSchedule.date} - ${dataSchedule.patient.name}`)
-        
-        setTimeout(() => {
-          setSchedule(dataPostSchedule)
-          next(1) 
-        }, 1000)
-      }
-
-    } catch (error) {
-      console.log('Erro no agendamento:', error)
-      toast.error('Ops.. O agendamento falhou!')
+      setTimeout(() => {
+        setSchedule(dataPostSchedule)
+        next(1)
+      }, 1000)
+    } else {
+      console.log('Erro no agendamento.')
+      toast.error(response.content as string)
     }
   }
+
 
   return (
     <Card className="m-10 max-w-md mx-auto">
@@ -84,7 +81,7 @@ export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormP
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-            <FormField 
+            <FormField
               control={form.control}
               name="patient.name"
               render={({ field }) => (
@@ -98,7 +95,7 @@ export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormP
               )}
             />
 
-            <FormField 
+            <FormField
               control={form.control}
               name="patient.cpf"
               render={({ field }) => (
@@ -121,7 +118,7 @@ export function ScheduleForm({ next, prev, patient, setSchedule }: ScheduleFormP
               )}
             />
 
-            <FormField 
+            <FormField
               control={form.control}
               name="patient.phone"
               render={({ field }) => (
