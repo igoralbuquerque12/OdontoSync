@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner"
 
 import { Patient } from '../../interfaces/patient'
-import { getPatients } from '../../services/patientService'
+import { getPatient } from '../../services/patientService'
 import { defaultErrorFunction } from '@/utils/errorTratament'
 
 
@@ -27,11 +27,11 @@ export function PatientSearch({ next, setPatient, setCpf }: PatientSearchProps) 
         return 
       }
       
-      const result = await getPatients(cpfInput)
+      const response = await getPatient(cpfInput)
       setCpf(cpfInput)
   
-      if (result) {
-        const dataPatient: Patient = result
+      if (response.status) {
+        const dataPatient: Patient = response.content as Patient
         setPatient(dataPatient)
 
         const nameSplit = dataPatient.name.split(' ')

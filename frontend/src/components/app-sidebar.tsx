@@ -14,16 +14,15 @@ import {
 
 
 const daysOfWeek = [
-  'Domingo',       // 0
-  'Segunda-feira', // 1
-  'Terça-feira',   // 2
-  'Quarta-feira',  // 3
-  'Quinta-feira',  // 4
-  'Sexta-feira',   // 5
-  'Sábado'         // 6
+  'Domingo',      
+  'Segunda-feira',
+  'Terça-feira',  
+  'Quarta-feira', 
+  'Quinta-feira', 
+  'Sexta-feira',  
+  'Sábado'        
 ];
-
-// get the next five days (include today)                                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                  
 function getNextFiveDays() {
   const today = new Date();  
   const utilDays = [];       
@@ -64,7 +63,7 @@ const items = [
     icon: User,
     subItems: [
       { title: "Buscar", url: "#buscar", icon: Search },
-      { title: "Cadastrar", url: "/pacientes/cadastrar/", icon: UserPlus },
+      { title: "Cadastrar", url: "/paciente/cadastrar/", icon: UserPlus },
     ]
   },
   {

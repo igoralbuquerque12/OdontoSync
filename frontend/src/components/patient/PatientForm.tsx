@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from 'sonner'
+import { useNavigate } from "react-router-dom"
 
-import type { Patient } from "@/interfaces/patient"
-import { defaultErrorFunction } from '@/utils/errorTratament'
 import { postPatient } from '@/services/patientService'
 
 const patientSchema = z.object({
@@ -21,18 +20,13 @@ const patientSchema = z.object({
 
 type PatientFormData = z.infer<typeof patientSchema>
 
-type PatientFormProps = {
-  cpf: string
-  setPatient: (patient: Patient) => void 
-  next: (jump: number) => void
-  prev: (jump: number) => void
-}
+export function PatientForm() {
+  const navigate = useNavigate()
 
-export function PatientForm({ cpf, setPatient, next, prev }: PatientFormProps) {
   const form = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
-      cpf: cpf,
+      cpf: "",
       name: "",
       birth_date: "",
       phone: "",
@@ -41,36 +35,26 @@ export function PatientForm({ cpf, setPatient, next, prev }: PatientFormProps) {
   })
 
   const onSubmit = async (dataPatient: PatientFormData) => {
-    try {
       const response = await postPatient(dataPatient)
 
-      if (response) {
-        const nameSplit = dataPatient.name.split(' ')
-        toast(`Paciente ${nameSplit[0]} ${nameSplit[nameSplit.length - 1]} cadastrado`)
-        setPatient(dataPatient)
-        
+      if (response.status) {
+        toast(response.content as string)
+        setTimeout(() => navigate('/'), 1000)
       } else {
-        toast.error('Ops.. Houve um erro no cadastro do paciente')
+        toast.error(response.content as string)
       }
-
-      next(1)
-
-    } catch (error) {
-      defaultErrorFunction(error)
-    }
   }
 
   return (
     <Card className="mt-13 max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Cadastro de Paciente</CardTitle>
+        <CardTitle className="text-lg">Cadastro de Paciente</CardTitle>
         <CardDescription>Preencha os dados do novo paciente</CardDescription>
       </CardHeader>
 
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            '
             <FormField
               control={form.control}
               name="cpf"
@@ -78,7 +62,7 @@ export function PatientForm({ cpf, setPatient, next, prev }: PatientFormProps) {
                 <FormItem>
                   <FormLabel>CPF</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled maxLength={11} />
+                    <Input {...field} maxLength={11} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +126,7 @@ export function PatientForm({ cpf, setPatient, next, prev }: PatientFormProps) {
             />
 
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => prev(1)} className="flex-1">
+              <Button type="button" variant="outline" className="flex-1">
                 Voltar
               </Button>
               <Button type="submit" className="flex-1">

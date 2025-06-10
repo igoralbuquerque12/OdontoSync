@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { PatientSearch } from "@/components/patient/searchPatient"
-import { PatientForm } from "@/components/patient/formPatient"
+import { PatientSearch } from "@/components/schedule/searchPatient"
+import { PatientForm } from "@/components/schedule/formPatient"
 import { ScheduleForm } from "@/components/schedule/scheduleForm"
 import { SuccessMessage } from "@/components/schedule/successMessageAppointment"
 
@@ -8,7 +8,7 @@ import { Patient, defaultPatient } from '../../interfaces/patient'
 import { Schedule, defaultSchedule } from '../../interfaces/schedule'
 
 
-export default function RegisterPatient() {
+export default function RegisterSchedule() {
   const [actualStep, setActualStep] = useState(1) 
   const [cpf, setCpf] = useState("")
   const [patient, setPatient] = useState<Patient>(defaultPatient)
