@@ -10,7 +10,7 @@ class ScheduleList(ListCreateAPIView):
     queryset = Schedule.objects.all()
     filter_backends = [filters.DjangoFilterBackend]
     filterset_fields = {
-        'date': ['exact']
+        'date': ['exact', 'gte', 'lte']
     }
 
     def get_serializer_class(self):
