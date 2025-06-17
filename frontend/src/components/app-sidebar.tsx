@@ -54,8 +54,7 @@ const items = [
     url: "#",
     icon: ChartLine,
     subItems: [
-      { title: "Visualizar semana", url: "#visualizar-semana", icon: ChartPie },
-      { title: "Visualizar mês", url: "#visualizar-mes", icon: Calendar1 },
+      { title: "Visualizar estatísticas", url: "/estatisticas", icon: ChartPie },
     ]
   },
   {
