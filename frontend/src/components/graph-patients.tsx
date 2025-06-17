@@ -1,16 +1,21 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
-const data = [
-  { day: "Segunda", patients: 12 },
-  { day: "Terça", patients: 19 },
-  { day: "Quarta", patients: 15 },
-  { day: "Quinta", patients: 22 },
-  { day: "Sexta", patients: 18 },
-  { day: "Sábado", patients: 8 },
-]
+import { ListSchedule } from "@/interfaces/schedule"
+import { formatScheduleByWeekDay } from "@/utils/formatSchedule"
 
 
-export function PatientGraph() {
+export function PatientGraph({ dataSchedules }: { dataSchedules: ListSchedule[] }) {
+  const schedulesFormatedByDayWeek = formatScheduleByWeekDay(dataSchedules)
+  console.log(schedulesFormatedByDayWeek)
+  const data = [
+    { day: "Segunda", patients: schedulesFormatedByDayWeek[0].length },
+    { day: "Terça", patients: schedulesFormatedByDayWeek[1].length },
+    { day: "Quarta", patients: schedulesFormatedByDayWeek[2].length },
+    { day: "Quinta", patients: schedulesFormatedByDayWeek[3].length },
+    { day: "Sexta", patients: schedulesFormatedByDayWeek[4].length },
+    { day: "Sábado", patients: schedulesFormatedByDayWeek[5].length },
+  ]
+
   return (
     <div className="h-[400px]">
       <ResponsiveContainer width="100%" height="100%">

@@ -8,30 +8,39 @@ import { AIContainer } from '../components/ai-container'
 
 import { getDateToday } from '../utils/getDate'
 import { ListSchedule } from '@/interfaces/schedule'
-import { getSchedule } from '@/services/scheduleService'
+import { getTodaySchedule, getWeekSchedule } from '@/services/scheduleService'
 
 import { useEffect, useState } from 'react'
+import { formatDate } from '@/utils/formatDate'
+import { getWeekStartEndDates } from "@/utils/getDate"
 
 const today = getDateToday();
 
 export default function Home() {
-  const [dataSchedule, setDataSchedule] = useState<ListSchedule[]>([])
+  const [todaySchedules, setTodaySchedules] = useState<ListSchedule[]>([])
+  const [weekSchedules, setWeekSchedules] = useState<ListSchedule[]>([])
 
   useEffect(() => {
-    const today = new Date()
+    const todayDateFormated = formatDate(new Date())
+    const weekDateFormated = getWeekStartEndDates()
 
-    const getDataSchedule = async () => {
-      const response = await getSchedule(today)
+    const getSchedules = async () => {
+      const responseTodaySchedules = await getTodaySchedule(todayDateFormated)
+      const responseWeekSchedules = await getWeekSchedule(weekDateFormated[0], weekDateFormated[1])
       
-      return response.content
+      return {
+        today: responseTodaySchedules.content,
+        week: responseWeekSchedules.content
+      }
     }
 
-    const setScheduleByFetch = async () => {
-      const data = await getDataSchedule()
-      setDataSchedule(data as ListSchedule[])
+    const setSchedulesByFetch = async () => {
+      const data = await getSchedules()
+      setTodaySchedules(data.today as ListSchedule[])
+      setWeekSchedules(data.week as ListSchedule[])
     }
     
-    setScheduleByFetch()
+    setSchedulesByFetch()
   }, [])
 
   return (
@@ -49,7 +58,7 @@ export default function Home() {
             <h1 className='text-2xl font-bold pb-1'>Quadro de Horários</h1>
             <p className='text-gray-500 font-medium'>Veja como está a distribuição dos horários da sua semana</p>
           </div>
-          <PatientGraph />
+          <PatientGraph dataSchedules={weekSchedules} />
         </div>
 
         <div className='border-[1px] border-gray-300 rounded shadow-sm m-5 p-5'>
@@ -63,7 +72,7 @@ export default function Home() {
           <h1 className='text-2xl font-bold pb-1'>Agenda do Dia</h1>
           <p className='text-gray-500 font-medium'>{today[0]}, {today[1]} de {today[2]} de {today[3]}</p>
         </div>
-        <ListPatient dataSchedule={dataSchedule} />
+        <ListPatient dataSchedule={todaySchedules} />
       </div>
     </div>
   )
