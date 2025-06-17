@@ -4,7 +4,8 @@ import Layout from './components/layout'
 import Home from './pages/Home'
 import RegisterSchedule from './pages/schedule/Register'
 import RegisterUser from './pages/users/Register'
-import RegisterPatient from './pages/patient/Register'
+import RegisterPatient from './pages/patient/RegisterPatient'
+import SearchPatient from './pages/patient/SearchPatient'
 import Statistics from './pages/statistics/Statistics'
 
 function AppRoutes() {
@@ -14,6 +15,7 @@ function AppRoutes() {
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} ></Route>
                     <Route path='/agenda/cadastrar' element={<RegisterSchedule />}></Route>
+                    <Route path='/paciente/buscar' element={<SearchPatient />}></Route>
                      <Route path='/paciente/cadastrar' element={<RegisterPatient />}></Route>
                      <Route path='/estatisticas' element={<Statistics />}></Route>
                 </Route>
