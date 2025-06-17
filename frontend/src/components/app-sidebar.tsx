@@ -1,4 +1,4 @@
-import { Calendar, Calendar1, User, ChartLine, Box, Search, UserPlus, Package, PlusCircle, FolderPen, ChartPie } from 'lucide-react'
+import { Calendar, User, ChartLine, Box, Search, UserPlus, Package, PlusCircle, FolderPen, ChartPie } from 'lucide-react'
 import { addDays } from 'date-fns'
 
 import {

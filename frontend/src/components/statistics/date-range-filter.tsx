@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { CalendarIcon } from "lucide-react"
-import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
+import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { getWeekStartEndDates } from "@/utils/getDate"
 
 interface DateRangeFilterProps {
   dateRange: {
@@ -15,41 +16,53 @@ interface DateRangeFilterProps {
 }
 
 export function DateRangeFilter({ dateRange, onDateRangeChange }: DateRangeFilterProps) {
-  const [activePeriod, setActivePeriod] = useState<string>("Este mês")
+  const [activePeriod, setActivePeriod] = useState<string>("Esta semana")
   const [isCustomOpen, setIsCustomOpen] = useState(false)
-
-  const formatDateToString = (date: Date): string => {
-    return format(date, "yyyy-MM-dd")
-  }
 
   const handlePresetClick = (preset: string) => {
     const today = new Date()
-    let startDate: Date
-    let endDate: Date = today
+    let startDate: string
+    let endDate: string
 
     switch (preset) {
-      case "Esta semana":
-        startDate = startOfWeek(today, { weekStartsOn: 1 })
-        endDate = endOfWeek(today, { weekStartsOn: 1 })
+      case "Esta semana": {
+        const thisWeek = getWeekStartEndDates()
+        startDate = thisWeek[0]
+        endDate = thisWeek[1]
         break
-      case "Este mês":
-        startDate = startOfMonth(today)
-        endDate = endOfMonth(today)
+      }
+      case "Este mês": {
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+        const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+
+        startDate = firstDayOfMonth.toISOString().split('T')[0]
+        endDate = lastDayOfMonth.toISOString().split('T')[0]
         break
-      case "Últimos 7 dias":
-        startDate = subDays(today, 6)
+      }
+      case "Últimos 7 dias": {
+        const sevenDaysAgo = new Date()
+        sevenDaysAgo.setDate(today.getDate() - 7)
+
+        startDate = sevenDaysAgo.toISOString().split('T')[0]
+        endDate = today.toISOString().split('T')[0]
         break
-      case "Últimos 30 dias":
-        startDate = subDays(today, 29)
+      }
+      case "Últimos 30 dias": {
+        const sevenDaysAgo = new Date()
+        sevenDaysAgo.setDate(today.getDate() - 30)
+
+        startDate = sevenDaysAgo.toISOString().split('T')[0]
+        endDate = today.toISOString().split('T')[0]
         break
+      }
       default:
         return
     }
 
     setActivePeriod(preset)
     onDateRangeChange({
-      startDate: formatDateToString(startDate),
-      endDate: formatDateToString(endDate),
+      startDate: startDate,
+      endDate: endDate,
     })
   }
 
@@ -133,7 +146,7 @@ export function DateRangeFilter({ dateRange, onDateRangeChange }: DateRangeFilte
                 </div>
                 <Button
                   onClick={() => setIsCustomOpen(false)}
-                  className="w-full mt-3 bg-[#003566] hover:bg-[#003566]/90"
+                  className="w-full mt-3 bg-[#003566] text-amber-50 hover:bg-[#003566]/90"
                   size="sm"
                 >
                   Aplicar
@@ -143,8 +156,8 @@ export function DateRangeFilter({ dateRange, onDateRangeChange }: DateRangeFilte
           </Popover>
 
           <div className="text-sm text-gray-600 ml-auto">
-            {format(new Date(dateRange.startDate), "dd/MM/yyyy", { locale: ptBR })} -{" "}
-            {format(new Date(dateRange.endDate), "dd/MM/yyyy", { locale: ptBR })}
+            {format(new Date(dateRange.startDate + "T00:00:00"), "dd/MM/yyyy", { locale: ptBR })} -{" "}
+            {format(new Date(dateRange.endDate + "T23:59:59"), "dd/MM/yyyy", { locale: ptBR })}
           </div>
         </div>
       </CardContent>

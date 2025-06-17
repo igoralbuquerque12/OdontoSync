@@ -8,7 +8,7 @@ import { AIContainer } from '../components/ai-container'
 
 import { getDateToday } from '../utils/getDate'
 import { ListSchedule } from '@/interfaces/schedule'
-import { getTodaySchedule, getWeekSchedule } from '@/services/scheduleService'
+import { getTodaySchedule, getScheduleByInterval } from '@/services/scheduleService'
 
 import { useEffect, useState } from 'react'
 import { formatDate } from '@/utils/formatDate'
@@ -26,7 +26,7 @@ export default function Home() {
 
     const getSchedules = async () => {
       const responseTodaySchedules = await getTodaySchedule(todayDateFormated)
-      const responseWeekSchedules = await getWeekSchedule(weekDateFormated[0], weekDateFormated[1])
+      const responseWeekSchedules = await getScheduleByInterval(weekDateFormated[0], weekDateFormated[1])
       
       return {
         today: responseTodaySchedules.content,

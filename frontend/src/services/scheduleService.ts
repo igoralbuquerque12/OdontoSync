@@ -33,9 +33,9 @@ export async function getTodaySchedule(date: string) {
     }
 }
 
-export async function getWeekSchedule(monday: string, saturday:string) {
+export async function getScheduleByInterval(start: string, end:string) {
         try {
-        const response = await fetch(`http://localhost:8000/api/v1/schedule/?date__gte=${monday}&date__lte=${saturday}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/schedule/?date__gte=${start}&date__lte=${end}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
