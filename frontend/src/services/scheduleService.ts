@@ -1,16 +1,41 @@
 import { defaultErrorFunction } from '../utils/errorTratament'
 import { Schedule, ListSchedule } from '../interfaces/schedule'
-import { formatDate } from '@/utils/formatDate'
 
 interface returnType {
     status: boolean
     content: ListSchedule[] | Schedule[] | Schedule | string | null
 }
 
-export async function getSchedule(date: Date) {
+export async function getTodaySchedule(date: string) {
     try {
-        const dateFormated = formatDate(date)
-        const response = await fetch(`http://localhost:8000/api/v1/schedule/?date=${dateFormated}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/schedule/?date=${date}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        if (!response.ok) throw new Error('Erro ao buscar dados de agendamentos')
+
+        const data: ListSchedule[] = await response.json()
+
+        return {
+            status: true,
+            content: data
+        }
+        
+    } catch (error) {
+        defaultErrorFunction(error)
+        return {
+            status: false,
+            content: ('Erro ao buscar dados de agendamentos')
+        }
+    }
+}
+
+export async function getWeekSchedule(monday: string, saturday:string) {
+        try {
+        const response = await fetch(`http://localhost:8000/api/v1/schedule/?date__gte=${monday}&date__lte=${saturday}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
