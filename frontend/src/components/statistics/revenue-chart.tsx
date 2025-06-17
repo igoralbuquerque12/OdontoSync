@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts"
 import { DollarSign } from "lucide-react"
+import { ListSchedule } from "@/interfaces/schedule"
 
 interface RevenueChartProps {
-  startDate: string
-  endDate: string
+  schedules: ListSchedule[]
+  loading: boolean
 }
 
 interface ChartData {
@@ -15,41 +16,33 @@ interface ChartData {
   displayDate: string
 }
 
-export function RevenueChart({ startDate, endDate }: RevenueChartProps) {
+export function RevenueChart({ schedules, loading }: RevenueChartProps) {
   const [data, setData] = useState<ChartData[]>([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchRevenueData = async () => {
-      setLoading(true)
-      try {
-        // Simular chamada para API
-        // const response = await fetch(`/api/revenue/chart?startDate=${startDate}&endDate=${endDate}`)
-        // const chartData = await response.json()
+    if (schedules.length > 0) {
+      const revenueByDate = schedules.reduce((acc, schedule) => {
+        const date = schedule.date
+        const value = parseFloat(schedule.value)
+        
+        if (!acc[date]) {
+          acc[date] = 0
+        }
+        acc[date] += value
+        return acc
+      }, {} as Record<string, number>)
 
-        // Dados simulados
-        const mockData: ChartData[] = [
-          { date: "2024-01-01", revenue: 2450.0, displayDate: "01/01" },
-          { date: "2024-01-02", revenue: 3200.5, displayDate: "02/01" },
-          { date: "2024-01-03", revenue: 1800.0, displayDate: "03/01" },
-          { date: "2024-01-04", revenue: 4100.75, displayDate: "04/01" },
-          { date: "2024-01-05", revenue: 5250.0, displayDate: "05/01" },
-          { date: "2024-01-06", revenue: 3800.25, displayDate: "06/01" },
-          { date: "2024-01-07", revenue: 2900.0, displayDate: "07/01" },
-        ]
+      const chartData = Object.entries(revenueByDate).map(([date, revenue]) => ({
+        date,
+        revenue,
+        displayDate: new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+      }))
 
-        setTimeout(() => {
-          setData(mockData)
-          setLoading(false)
-        }, 500)
-      } catch (error) {
-        console.error("Erro ao buscar dados de faturamento:", error)
-        setLoading(false)
-      }
+      chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      
+      setData(chartData)
     }
-
-    fetchRevenueData()
-  }, [startDate, endDate])
+  }, [schedules])
 
   return (
     <Card className="border-[#003566]/20">
@@ -63,6 +56,10 @@ export function RevenueChart({ startDate, endDate }: RevenueChartProps) {
         {loading ? (
           <div className="h-[300px] flex items-center justify-center">
             <div className="text-gray-500">Carregando dados...</div>
+          </div>
+        ) : data.length === 0 ? (
+          <div className="h-[300px] flex items-center justify-center">
+            <div className="text-gray-500">Nenhum dado disponível para o período selecionado</div>
           </div>
         ) : (
           <ChartContainer

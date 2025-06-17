@@ -1,15 +1,40 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { StatsCards } from "@/components/statistics/stats-cards"
 import { ScheduleChart } from "@/components/statistics/schedule-chart"
 import { RevenueChart } from "@/components/statistics/revenue-chart"
 import { DateRangeFilter } from "@/components/statistics/date-range-filter"
 import { BarChart3 } from "lucide-react"
+import { getWeekStartEndDates } from "@/utils/getDate"
+import { getScheduleByInterval } from "@/services/scheduleService"
+import { ListSchedule } from "@/interfaces/schedule"
 
 export default function Statistics() {
+  const dateWeek = getWeekStartEndDates()
+  const [loading, setLoading] = useState(true)
+  const [schedules, setSchedules] = useState<ListSchedule[]>([])
   const [dateRange, setDateRange] = useState({
-    startDate: "2024-01-01",
-    endDate: "2024-01-31",
+    startDate: dateWeek[0],
+    endDate: dateWeek[1],
   })
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setLoading(true)
+      try {
+        const dataSchedules = await getScheduleByInterval(dateRange.startDate, dateRange.endDate)
+        setSchedules(dataSchedules.content as ListSchedule[])
+        
+        setTimeout(() => {
+          setLoading(false)
+        }, 500)
+      } catch (error) {
+        console.error("Erro ao buscar estatísticas:", error)
+        setLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [dateRange])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -28,12 +53,12 @@ export default function Statistics() {
         </div>
 
         <div className="mb-8">
-          <StatsCards startDate={dateRange.startDate} endDate={dateRange.endDate} />
+          <StatsCards loading={loading} schedules={schedules} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ScheduleChart startDate={dateRange.startDate} endDate={dateRange.endDate} />
-          <RevenueChart startDate={dateRange.startDate} endDate={dateRange.endDate} />
+          <ScheduleChart schedules={schedules} loading={loading} />
+          <RevenueChart schedules={schedules} loading={loading} />
         </div>
       </div>
     </div>

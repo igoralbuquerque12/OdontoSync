@@ -1,56 +1,49 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Calendar, Users, TrendingUp } from "lucide-react"
+import { ListSchedule } from "@/interfaces/schedule"
 
 interface StatsCardsProps {
-  startDate: string
-  endDate: string
+  schedules: ListSchedule[]
+  loading: boolean
 }
 
 interface StatsData {
   totalRevenue: number
   totalAppointments: number
   totalPatients: number
-  occupancyRate: number
+  averageValue: number
 }
 
-export function StatsCards({ startDate, endDate }: StatsCardsProps) {
+export function StatsCards({ schedules, loading }: StatsCardsProps) {
   const [stats, setStats] = useState<StatsData>({
     totalRevenue: 0,
     totalAppointments: 0,
     totalPatients: 0,
-    occupancyRate: 0,
+    averageValue: 0,
   })
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchStats = async () => {
-      setLoading(true)
-      try {
-        // Simular chamada para API
-        // const response = await fetch(`/api/stats?startDate=${startDate}&endDate=${endDate}`)
-        // const data = await response.json()
+    if (schedules.length > 0) {
+      const totalRevenue = schedules.reduce((acc, schedule) => {
+        return acc + parseFloat(schedule.value)
+      }, 0)
 
-        // Dados simulados
-        const mockData: StatsData = {
-          totalRevenue: 45230.5,
-          totalAppointments: 156,
-          totalPatients: 89,
-          occupancyRate: 78.5,
-        }
+      const totalAppointments = schedules.length
 
-        setTimeout(() => {
-          setStats(mockData)
-          setLoading(false)
-        }, 500)
-      } catch (error) {
-        console.error("Erro ao buscar estatísticas:", error)
-        setLoading(false)
-      }
+      const uniquePatients = new Set(schedules.map(schedule => schedule.patient.cpf))
+      const totalPatients = uniquePatients.size
+
+      const averageValue = totalRevenue / totalAppointments
+
+      setStats({
+        totalRevenue,
+        totalAppointments,
+        totalPatients,
+        averageValue
+      })
     }
-
-    fetchStats()
-  }, [startDate, endDate])
+  }, [schedules])
 
   const cards = [
     {
@@ -75,8 +68,8 @@ export function StatsCards({ startDate, endDate }: StatsCardsProps) {
       bgColor: "bg-purple-50",
     },
     {
-      title: "Taxa de Ocupação",
-      value: loading ? "..." : `${stats.occupancyRate}%`,
+      title: "Valor Médio por Consulta",
+      value: loading ? "..." : `R$ ${stats.averageValue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
       icon: TrendingUp,
       color: "text-orange-600",
       bgColor: "bg-orange-50",

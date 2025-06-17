@@ -3,53 +3,45 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from "recharts"
 import { Calendar } from "lucide-react"
+import { ListSchedule } from "@/interfaces/schedule"
 
 interface ScheduleChartProps {
-  startDate: string
-  endDate: string
+  schedules: ListSchedule[]
+  loading: boolean
 }
 
 interface ChartData {
   date: string
-  Schedule: number
+  appointments: number
   displayDate: string
 }
 
-export function ScheduleChart({ startDate, endDate }: ScheduleChartProps) {
+export function ScheduleChart({ schedules, loading }: ScheduleChartProps) {
   const [data, setData] = useState<ChartData[]>([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchScheduleData = async () => {
-      setLoading(true)
-      try {
-        // Simular chamada para API
-        // const response = await fetch(`/api/Schedule/chart?startDate=${startDate}&endDate=${endDate}`)
-        // const chartData = await response.json()
+    if (schedules.length > 0) {
+      const appointmentsByDate = schedules.reduce((acc, schedule) => {
+        const date = schedule.date
+        
+        if (!acc[date]) {
+          acc[date] = 0
+        }
+        acc[date]++
+        return acc
+      }, {} as Record<string, number>)
 
-        // Dados simulados
-        const mockData: ChartData[] = [
-          { date: "2024-01-01", Schedule: 12, displayDate: "01/01" },
-          { date: "2024-01-02", Schedule: 15, displayDate: "02/01" },
-          { date: "2024-01-03", Schedule: 8, displayDate: "03/01" },
-          { date: "2024-01-04", Schedule: 18, displayDate: "04/01" },
-          { date: "2024-01-05", Schedule: 22, displayDate: "05/01" },
-          { date: "2024-01-06", Schedule: 14, displayDate: "06/01" },
-          { date: "2024-01-07", Schedule: 10, displayDate: "07/01" },
-        ]
+      const chartData = Object.entries(appointmentsByDate).map(([date, appointments]) => ({
+        date,
+        appointments,
+        displayDate: new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+      }))
 
-        setTimeout(() => {
-          setData(mockData)
-          setLoading(false)
-        }, 500)
-      } catch (error) {
-        console.error("Erro ao buscar dados de agendamentos:", error)
-        setLoading(false)
-      }
+      chartData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      
+      setData(chartData)
     }
-
-    fetchScheduleData()
-  }, [startDate, endDate])
+  }, [schedules])
 
   return (
     <Card className="border-[#003566]/20">
@@ -64,10 +56,14 @@ export function ScheduleChart({ startDate, endDate }: ScheduleChartProps) {
           <div className="h-[300px] flex items-center justify-center">
             <div className="text-gray-500">Carregando dados...</div>
           </div>
+        ) : data.length === 0 ? (
+          <div className="h-[300px] flex items-center justify-center">
+            <div className="text-gray-500">Nenhum dado disponível para o período selecionado</div>
+          </div>
         ) : (
           <ChartContainer
             config={{
-              Schedule: {
+              appointments: {
                 label: "Agendamentos",
                 color: "#003566",
               },
@@ -77,9 +73,17 @@ export function ScheduleChart({ startDate, endDate }: ScheduleChartProps) {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <XAxis dataKey="displayDate" tick={{ fontSize: 12 }} axisLine={{ stroke: "#003566" }} />
-                <YAxis tick={{ fontSize: 12 }} axisLine={{ stroke: "#003566" }} />
-                <ChartTooltip content={<ChartTooltipContent />} labelFormatter={(value) => `Data: ${value}`} />
-                <Bar dataKey="Schedule" fill="#003566" radius={[4, 4, 0, 0]} />
+                <YAxis 
+                  tick={{ fontSize: 12 }} 
+                  axisLine={{ stroke: "#003566" }}
+                  allowDecimals={false}
+                />
+                <ChartTooltip 
+                  content={<ChartTooltipContent />} 
+                  labelFormatter={(value) => `Data: ${value}`}
+                  formatter={(value: number) => [`${value}`, " Agendamentos"]}
+                />
+                <Bar dataKey="appointments" fill="#003566" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
