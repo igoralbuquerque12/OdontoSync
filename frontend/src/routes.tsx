@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import RegisterSchedule from './pages/schedule/Register'
 import RegisterUser from './pages/users/Register'
 import RegisterPatient from './pages/patient/Register'
+import Statistics from './pages/statistics/Statistics'
 
 function AppRoutes() {
     return (
@@ -14,6 +15,7 @@ function AppRoutes() {
                     <Route path="/" element={<Home />} ></Route>
                     <Route path='/agenda/cadastrar' element={<RegisterSchedule />}></Route>
                      <Route path='/paciente/cadastrar' element={<RegisterPatient />}></Route>
+                     <Route path='/estatisticas' element={<Statistics />}></Route>
                 </Route>
                 <Route path='/cadastro' element={<RegisterUser />}></Route>
             </Routes>
