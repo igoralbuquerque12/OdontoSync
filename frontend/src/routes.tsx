@@ -7,6 +7,7 @@ import RegisterUser from './pages/users/Register'
 import RegisterPatient from './pages/patient/RegisterPatient'
 import SearchPatient from './pages/patient/SearchPatient'
 import Statistics from './pages/statistics/Statistics'
+import NotFound from "@/pages/NotFound"
 
 function AppRoutes() {
     return (
@@ -20,6 +21,8 @@ function AppRoutes() {
                      <Route path='/estatisticas' element={<Statistics />}></Route>
                 </Route>
                 <Route path='/cadastro' element={<RegisterUser />}></Route>
+
+                <Route path='*' element={<NotFound />}/>
             </Routes>
     </BrowserRouter>
     )
