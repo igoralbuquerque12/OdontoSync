@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { User, Save, Trash2, CheckCircle, AlertCircle } from "lucide-react"
 import { Patient } from "@/interfaces/patient"
+import { deletePatient, updatePatient } from "@/services/patientService"
+import { toast } from "sonner"
 
 interface PatientFormProps {
   patient: Patient
@@ -58,23 +60,21 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
     setMessage(null)
 
     try {
-      // Simular chamada para API
-      // const response = await fetch(`/api/patients/${formData.cpf.replace(/\D/g, "")}`, {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData)
-      // })
+      const response = await updatePatient(patient.cpf, formData)
+
+      if (!response.status) throw new Error('Houve um erro em atualizar esse paciente.')
 
       setTimeout(() => {
+        toast('Paciente atualizado com sucesso.')
         onPatientUpdated(formData)
         setIsEditing(false)
         setIsSaving(false)
         setMessage({ type: "success", text: "Dados atualizados com sucesso!" })
 
-        // Remove a mensagem após 3 segundos
         setTimeout(() => setMessage(null), 3000)
       }, 1000)
     } catch (error) {
+      toast.error('Houve um erro em atualizar este paciente.')
       console.error('Error at update patient: ', error)
       setIsSaving(false)
       setMessage({ type: "error", text: "Erro ao salvar os dados" })
@@ -85,16 +85,17 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
     setIsDeleting(true)
 
     try {
-      // Simular chamada para API
-      // await fetch(`/api/patients/${formData.cpf.replace(/\D/g, "")}`, {
-      //   method: "DELETE"
-      // })
+      const response = await deletePatient(patient.cpf)
+
+      if (!response.status) throw new Error('Houve um erro em deletar esse paciente.')
 
       setTimeout(() => {
+        toast('Paciente deletado com sucesso.')
         onPatientDeleted()
         setIsDeleting(false)
       }, 1000)
     } catch (error) {
+      toast.error('Houve um erro em deletar este paciente.')
       console.error("Error at delete patient: ", error)
       setIsDeleting(false)
       setMessage({ type: "error", text: "Erro ao deletar paciente" })
@@ -132,7 +133,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
                       Deletar
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="bg-gray-100 border-0">
                     <AlertDialogHeader>
                       <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
                       <AlertDialogDescription>
@@ -145,7 +146,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
                       <AlertDialogAction
                         onClick={handleDelete}
                         disabled={isDeleting}
-                        className="bg-red-600 hover:bg-red-700"
+                        className="bg-red-600 text-amber-50 hover:bg-red-700"
                       >
                         {isDeleting ? "Deletando..." : "Deletar"}
                       </AlertDialogAction>
@@ -193,7 +194,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <Label htmlFor="cpf">CPF</Label>
-            <Input id="cpf" value={formData.cpf} disabled className="bg-gray-50 cursor-not-allowed" />
+            <Input id="cpf" value={formData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4')} disabled className="bg-gray-50 cursor-not-allowed mt-1" />
           </div>
 
           <div>
@@ -203,7 +204,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               disabled={!isEditing}
-              className={!isEditing ? "bg-gray-50" : "border-[#003566]/30 focus:border-[#003566]"}
+              className={!isEditing ? "bg-gray-50 mt-1" : "border-[#003566]/30 focus:border-[#003566] mt-1"}
             />
           </div>
 
@@ -215,7 +216,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
               value={formData.birth_date}
               onChange={(e) => handleInputChange("birth_date", e.target.value)}
               disabled={!isEditing}
-              className={!isEditing ? "bg-gray-50" : "border-[#003566]/30 focus:border-[#003566]"}
+              className={!isEditing ? "bg-gray-50 mt-1" : "border-[#003566]/30 focus:border-[#003566] mt-1"}
             />
           </div>
 
@@ -228,7 +229,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
               disabled={!isEditing}
               placeholder="(11) 99999-9999"
               maxLength={15}
-              className={!isEditing ? "bg-gray-50" : "border-[#003566]/30 focus:border-[#003566]"}
+              className={!isEditing ? "bg-gray-50 mt-1" : "border-[#003566]/30 focus:border-[#003566] mt-1"}
             />
           </div>
 
@@ -240,7 +241,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
               disabled={!isEditing}
-              className={!isEditing ? "bg-gray-50" : "border-[#003566]/30 focus:border-[#003566]"}
+              className={!isEditing ? "bg-gray-50 mt-1" : "border-[#003566]/30 focus:border-[#003566] mt-1"}
             />
           </div>
         </div>
