@@ -54,7 +54,10 @@ export function FilterPatientSearch({ onPatientFound, isLoading, setIsLoading }:
         setError("")
 
         try {
-            const data = await getPatient(cpf)
+            const cpfOnlyNumbers = cpf.replace(/\D/g, '')
+            const data = await getPatient(cpfOnlyNumbers)
+
+            if (!data.status) throw error
 
             setTimeout(() => {
                 onPatientFound(data.content as Patient)
