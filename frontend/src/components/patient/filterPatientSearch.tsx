@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search, AlertCircle } from "lucide-react"
+import { Search } from "lucide-react"
+import { toast } from "sonner"
 
 import { getPatient } from "@/services/patientService"
 import { Patient } from "@/interfaces/patient"
@@ -36,7 +37,6 @@ export function FilterPatientSearch({ onPatientFound, isLoading, setIsLoading }:
     const handleCPFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const formatted = formatCPF(e.target.value)
         setCpf(formatted)
-        setError("")
     }
 
     const validateCPF = (cpf: string) => {
@@ -51,7 +51,6 @@ export function FilterPatientSearch({ onPatientFound, isLoading, setIsLoading }:
         }
 
         setIsLoading(true)
-        setError("")
 
         try {
             const cpfOnlyNumbers = cpf.replace(/\D/g, '')
@@ -62,10 +61,11 @@ export function FilterPatientSearch({ onPatientFound, isLoading, setIsLoading }:
             setTimeout(() => {
                 onPatientFound(data.content as Patient)
                 setIsLoading(false)
+                toast('Paciente encontrado com sucesso.')
             }, 500)
         } catch (error) {
+            toast.error('Paciente não encontrado.')
             console.error("Error with get patient: ", error)
-            setError("Paciente não encontrado")
             setIsLoading(false)
         }
     }
@@ -100,12 +100,6 @@ export function FilterPatientSearch({ onPatientFound, isLoading, setIsLoading }:
                             maxLength={14}
                             className="border-[#003566]/30 focus:border-[#003566] focus:ring-[#003566]"
                         />
-                        {error && (
-                            <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
-                                <AlertCircle className="h-4 w-4" />
-                                {error}
-                            </div>
-                        )}
                     </div>
                     <Button
                         onClick={handleSearch}

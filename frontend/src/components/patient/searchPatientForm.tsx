@@ -158,7 +158,7 @@ export function SearchPatientForm({ patient, onPatientUpdated, onPatientDeleted 
                 <Button onClick={handleCancel} variant="outline" disabled={isSaving}>
                   Cancelar
                 </Button>
-                <Button onClick={handleSave} disabled={isSaving} className="bg-[#003566] hover:bg-[#003566]/90">
+                <Button onClick={handleSave} disabled={isSaving} className="bg-[#003566] text-amber-50 hover:bg-[#003566]/90">
                   {isSaving ? (
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
