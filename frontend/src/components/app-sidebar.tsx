@@ -1,4 +1,4 @@
-import { Calendar, User, ChartLine, Box, Search, UserPlus, Package, PlusCircle, FolderPen, ChartPie } from 'lucide-react'
+import { Calendar, FileClock, CalendarPlus, User, ChartLine, Box, Search, UserPlus, Package, PlusCircle, FolderPen, ChartPie } from 'lucide-react'
 import { addDays } from 'date-fns'
 
 import {
@@ -50,8 +50,14 @@ const items = [
     subItems: getNextFiveDays()
   },
   {
+    title: "Agendamentos",
+    icon: CalendarPlus,
+    subItems: [
+      { title: "Novo agendamento", url: "/agenda/cadastrar", icon: FileClock }
+    ]
+  },
+  {
     title: "Relatórios e Estatísticas",
-    url: "#",
     icon: ChartLine,
     subItems: [
       { title: "Visualizar estatísticas", url: "/estatisticas", icon: ChartPie },
@@ -69,8 +75,8 @@ const items = [
     title: "Materiais",
     icon: Box,
     subItems: [
-      { title: "Estoque", url: "#estoque", icon: Package },
-      { title: "Adicionar Novo Item", url: "#adicionar", icon: PlusCircle },
+      { title: "Estoque", url: "/estoque", icon: Package },
+      { title: "Adicionar Novo Item", url: "/estoque/adicionar", icon: PlusCircle },
     ]
   }
 ]
@@ -86,7 +92,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title} className="flex flex-col py-1 ">
                   <SidebarMenuButton asChild className="text-lg font-medium hover:bg-accent">
-                    <a href={item.url} className="flex items-center gap-2 p-2">
+                    <a className="flex items-center gap-2 p-2">
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
                     </a>
